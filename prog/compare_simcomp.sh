@@ -27,27 +27,29 @@ else
     dkcf1=$(readlink -f $1)
     dkcf2=$(readlink -f $2)
     fout=$3
-    fout1=${fout}_global.out
-    fout2=${fout}_local.out
+    fout1=${fout}.simcomp_global.out
+    fout2=${fout}.simcomp_local.out
 
     echo "#1 calculate GLOBAL simcomp"
     scr1=$(sh $WDIR/5_simcomp.sh $dkcf1 $dkcf2 "global")
     echo "  script: $scr1"
-    sh $scr1 > $fout1 
+    sh $scr1 | cut -f 1,3,6 > $fout1 
 
     echo "#2 calculate LOCAL simcomp"
     scr2=$(sh $WDIR/5_simcomp.sh $dkcf1 $dkcf2 "local")
     echo "  script: $scr2"
-    sh $scr2 > $fout2 
+    sh $scr2 | cut -f 1,3,6 > $fout2 
     echo "#3 merge results"
-    fout3=${fout}_result.txt
-    fout4=${fout}_result.sorted..txt
+    fout3=${fout}.simcomp_result.txt
+    fout4=${fout}.simcomp_result.sorted.txt
 
-    paste $fout1 $fout2 | cut -f 1,3,6,13 > $fout3
+    paste $fout1 $fout2 | cut -f 1-3,6 > $fout3
     cat $fout3 | grep "^#" -v | sort -nrk 3 -nrk 4 > $fout4
 
     sed -i "1i #Compound1\tCompound2\tSIMCOMP_global\tSIMCOMP_local" $fout3
     sed -i "1i #Compound1\tCompound2\tSIMCOMP_global\tSIMCOMP_local" $fout4
     
     echo "#4 done !!";
+    echo "  result: $fout3";
+    echo "  sorted: $fout4";
 fi

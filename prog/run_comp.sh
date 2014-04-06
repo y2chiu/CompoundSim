@@ -1,8 +1,19 @@
 #!/usr/bin/env bash
-usage="USAGE: $0 DIR_SET1 DIR_SET2"
+usage="USAGE: $0 DIR_SET1 DIR_SET2 OUT_FILE_NAME"
 
-if [ $# -ne 2 ] || [ ! -d $1 ] || [ ! -d $2 ]; then
+if [ $# -ne 3 ] ; then
     echo " !! [ERROR] Missing arguments!!"
+    echo ${usage}
+    exit 1
+elif [ ! -d $1 ] ; then
+    echo " !! [ERROR] DIR_SET1: ${1} doesn't exist"
+    echo ${usage}
+    exit 1
+elif [ ! -d $2 ] ; then
+    echo " !! [ERROR] DIR_SET2: ${2} doesn't exist"
+    echo ${usage}
+    exit 1
+elif [ -z $3 ] ; then
     echo ${usage}
     exit 1
 else
@@ -12,56 +23,62 @@ else
     export WDIR=$W
     #export PROG_TIMEOUT="timeout"
     export PROG_TIMEOUT=$WDIR"/tools/timeout -t "
-    #export PROG_BABEL="babel"
-    export PROG_BABEL=$WDIR"/tools/babel"
-    export PROG_AP=$WDIR"/tools/ap"
-    export PROG_APDEF=$WDIR"/tools/ap_DEFINITION.txt"
-    export PROG_CM=$WDIR"/tools/checkmol"
-    export PROG_KCF=$WDIR"/tools/makekcf"
     export PROG_SIMCOMP=$WDIR"/tools/simcomp"
     export RID=$RANDOM
 
-    dmol=$1
-    dmol2=$(echo $dmol | sed 's/1_mol/2_mol2/');
-    dkcf=$(echo $dmol | sed 's/1_mol/3_kcf/');
+    dset1=$(readlink -f $1)
+    dset2=$(readlink -f $2)
+    fout=$3
+    
+    set1=$(echo $dset1 | xargs -I{} basename {} "/")
+    set2=$(echo $dset2 | xargs -I{} basename {} "/")
 
-    name=$(echo $dmol | sed 's/1_mol//' | xargs -I{} basename {} "/")
-    if [ -z $name ]; then
-        name="query"
+    fea1_ap=$dset1"/fea.ap."$set1
+    fea1_cm=$dset1"/fea.cm."$set1
+    dkcf1=$dset1"/3_kcf"
+    
+    if [ ! -f $fea1_ap ]; then
+        echo " !! [ERROR] NO SET1 AP FEATURE FILE: ${fea1_ap}" 
+        exit 1
+    elif [ ! -f $fea1_cm ]; then
+        echo " !! [ERROR] NO SET1 CM FEATURE FILE: ${fea1_cm}" 
+        exit 1
+    elif [ ! -d $dkcf1 ]; then
+        echo " !! [ERROR] SET1 KCF DIR doesn't exist: ${dkcf1}" 
+        exit 1
     fi
-    export SET_NAME=$name
-
-    mkdir -p $dmol2;
-    mkdir -p $dkcf;
-
-    echo "#1 translate to MOL2: $dmol2";
-    sh $W/1_trans_mol2.sh $dmol $dmol2
     
-    echo "#2 generate compound features";
-    sh $W/2_gen_fea.sh $dmol $dmol2
-
-    echo "#3 translate to KCF: $dkcf"
-    sh $W/3_mol2kcf.sh $dmol $dkcf
-    n=$(find $dkcf -type f -name '*.kcf' | wc -l)
-    echo "  generate $n KCF files"
+    fea2_ap=$dset2"/fea.ap."$set2
+    fea2_cm=$dset2"/fea.cm."$set2
+    dkcf2=$dset2"/3_kcf"
     
-    W=$(dirname $(readlink -f $0));
-    dfea=$(readlink -f $1);
-    s1=$2
-    s2=$3
+    if [ ! -f $fea2_ap ]; then
+        echo " !! [ERROR] NO SET1 AP FEATURE FILE: ${fea2_ap}" 
+        exit 1
+    elif [ ! -f $fea2_cm ]; then
+        echo " !! [ERROR] NO SET1 CM FEATURE FILE: ${fea2_cm}" 
+        exit 1
+    elif [ ! -d $dkcf2 ]; then
+        echo " !! [ERROR] SET1 KCF DIR doesn't exist: ${dkcf2}" 
+        exit 1
+    fi
 
-    fout=$(date +%Y%m%d);
-    setn="$s1-$s2";
-
-    echo -e "#1 calculate tanimoto";
-    php $W/4_tanimoto_pair.php $dfea/fea.ap.$s1 $dfea/fea.ap.$s2 > $fout.tani.ap.$setn
-    php $W/4_tanimoto_pair.php $dfea/fea.cm.$s1 $dfea/fea.cm.$s2 > $fout.tani.cm.$setn
-
-    echo -e "#2 merge results";
-    paste $fout.tani.ap.$setn $fout.tani.cm.$setn | cut -f 1-3,6 > $fout.result.ap-cm.out.$setn
-    cat $fout.result.ap-cm.out.$setn | sort -nrk 3 -nrk 4 > $fout.result.ap-cm.sorted.$setn
-
-    echo -e "#3 done !!";
+    echo -e "\n#A. RUN FEATURE COMPARISON"
+    sh $WDIR/compare_fea.sh $fea1_ap $fea2_ap $fout
     
-    echo "#4 done !!";
+    echo -e "\n#B. RUN GLOBAL/LOCAL SIMCOMP"
+    sh $WDIR/compare_simcomp.sh $dkcf1 $dkcf2 $fout
+
+    echo -e "\n#C. MERGE RESULTS"
+    f1=${fout}.fea_tani_ap.txt
+    f2=${fout}.fea_tani_cm.txt
+    f3=${fout}.simcomp_global.out
+    f4=${fout}.simcomp_local.out
+    fo=${fout}_result.txt
+    php $WDIR/6_merge_result.php $f1 $f2 $f3 $f4 > $fo
+
+    sed -i "1i #Compound1\tCompound2\tAP_tanimoto\tCheckmol_tanimoto\t\tSIMCOMP_global\tSIMCOMP_local" $fo
+
+    echo -e "#D. FINISH"
+    echo -e "  result: $fo"
 fi

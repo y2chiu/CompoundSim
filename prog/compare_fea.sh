@@ -32,14 +32,14 @@ else
     fea_cm2=$dfea2/$(basename $fea_ap2 | sed 's/ap/cm/g')
 
     echo "#1 calculate tanimoto similarity"
-    fout_ap=$fout.tani_ap.txt
-    fout_cm=$fout.tani_cm.txt
+    fout_ap=$fout.fea_tani_ap.txt
+    fout_cm=$fout.fea_tani_cm.txt
     php $WDIR/4_tanimoto_pair.php $fea_ap1 $fea_ap2 > $fout_ap
     php $WDIR/4_tanimoto_pair.php $fea_cm1 $fea_cm2 > $fout_cm
 
     echo "#2 merge results"
-    fout3=${fout}_result.txt
-    fout4=${fout}_result.sorted.txt
+    fout3=${fout}.fea_result.txt
+    fout4=${fout}.fea_result.sorted.txt
 
     paste $fout_ap $fout_cm | cut -f 1-3,6 > $fout3
     cat $fout3 | grep "^#" -v | sort -nrk 3 -nrk 4 > $fout4
@@ -48,4 +48,6 @@ else
     sed -i "1i #Compound1\tCompound2\tAP_tanimoto\tCheckmol_tanimoto" $fout4
     
     echo "#3 done !!";
+    echo "  result: $fout3";
+    echo "  sorted: $fout4";
 fi
