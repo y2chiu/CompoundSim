@@ -34,7 +34,7 @@ else
     mkdir -p $dmol2;
     mkdir -p $dkcf;
 
-    dout=$(dirname $1)"/.log";
+    dout=$(dirname $dmol);
     find $dmol/ -name '*.mol' > $dout/list.$SET_NAME.txt
     n=$(cat $dout/list.$SET_NAME.txt | wc -l)
     echo "#1 There are $n MOL files";
