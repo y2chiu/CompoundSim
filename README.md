@@ -16,13 +16,13 @@ Calculate compound similarity
   ```
 
 4. Result files
-  >Merged file:  
-  >  example_test_result.txt  
-  >  
-  >Feature compariosn:  
-  >example_test_fea_result.txt  
-  >example_test_fea_result.sorted.txt  
-  >  
-  >SIMCOMP comparison:  
-  >example_test_simcomp_result.txt  
-  >example_test_simcomp_result.sorted.txt  
+  - Merged file:  
+    example_test_result.txt  
+   
+  - Feature compariosn:  
+    example_test_fea_result.txt  
+    example_test_fea_result.sorted.txt  
+   
+  - SIMCOMP comparison:   
+    example_test_simcomp_result.txt  
+    example_test_simcomp_result.sorted.txt  
