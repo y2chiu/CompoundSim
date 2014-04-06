@@ -1,0 +1,9 @@
+Car C.ar
+Cna C.3 C.2 C.1 C.cat
+Nar N.ar
+Nna N.3 N.2 N.1 N.am N.4 N.pl3
+O3 O.3
+O2 O.2
+S  S.3 S.2 S.O S.o2
+P3 P.3
+X  F Cl Br I
