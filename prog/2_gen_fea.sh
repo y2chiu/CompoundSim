@@ -32,14 +32,14 @@ else
     fi
 
     ### Checkmol
-    fout="${dlog}/t2_get_fea_cm_$RID.cript";
-    find $dmol -type f -name '*.mol' -exec basename {} ".mol" \; | \
+    fout="${dlog}/t2_get_fea_cm_$RID.script";
+    find $dmol/ -type f -name '*.mol' -exec basename {} ".mol" \; | \
         awk -v P=$PROG_CM -v dmol=$dmol \
         '{printf("echo -n \"%s\t\";%s -s %s/%s.mol\n",$1,P,dmol,$1);}' > $fout
     bash $fout | sort > $dfea/fea.cm.$SET_NAME
 
     ### AP
-    find $dmol2 -type f -name '*.mol2' > $dlog/lst.ap.$SET_NAME.txt
+    find $dmol2/ -type f -name '*.mol2' > $dlog/lst.ap.$SET_NAME.txt
     if [ ! -f "ap_DEFINITION.txt" ]; then
         cp -r $PROG_APDEF .
     fi;

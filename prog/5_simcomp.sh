@@ -52,8 +52,8 @@ else
     fout="$UTMP/t5_align_kcf_$RID.$alnt.script";
     #lst1=$(find $dkcf1 -name '*.kcf' -exec basename {} ".kcf" \; | sort)
     #lst2=$(find $dkcf2 -name '*.kcf' -exec basename {} ".kcf" \; | sort)
-    lst1=$(find $dkcf1 -name '*.kcf' | sort)
-    lst2=$(find $dkcf2 -name '*.kcf' | sort)
+    lst1=$(find $dkcf1/ -name '*.kcf' | sort)
+    lst2=$(find $dkcf2/ -name '*.kcf' | sort)
 
     echo -n "" > $fout
     for i in $lst1
