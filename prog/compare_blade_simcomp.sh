@@ -22,7 +22,7 @@ else
     #W=$(cd "$(dirname "$0")" && pwd -P)
     export WDIR=$W
     export PROG_SIMCOMP=$WDIR"/tools/simcomp"
-    export PROG_TOJOB=$WDIR"/tools/tojob.sh"
+    export PROG_TOJOB=$WDIR"/scripts/tojob.sh"
     export RID=$RANDOM
     
     USER=$(whoami)

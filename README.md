@@ -1,6 +1,11 @@
 Calculate compound similarity 
 =============================
 
+##Requirements
+
+Some tools or programs (ap, checkmol, obabel, simcomp, makekcf) should be pleased in prog/tools. 
+Otherwise, need to modify the paths in the shell scripts.
+
 ##Steps
 
 1. Prepare the compound MOL files

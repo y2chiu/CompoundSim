@@ -22,7 +22,7 @@ else
     #W=$(cd "$(dirname "$0")" && pwd -P);
     export WDIR=$W
     #export PROG_TIMEOUT="timeout"
-    export PROG_TIMEOUT=$WDIR"/tools/timeout -t "
+    export PROG_TIMEOUT=$WDIR"/script/timeout -t "
     export PROG_SIMCOMP=$WDIR"/tools/simcomp"
     export RID=$RANDOM
 

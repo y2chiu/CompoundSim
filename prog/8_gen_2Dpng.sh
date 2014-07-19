@@ -25,7 +25,7 @@ else
     
     if [ -z $PROG_TIMEOUT ]; then
         #export PROG_TIMEOUT="timeout"
-        PROG_TIMEOUT=$WDIR"/tools/timeout -t "
+        PROG_TIMEOUT=$WDIR"/scripts/timeout -t "
     fi
     
     if [ -z $RID ]; then

@@ -11,7 +11,7 @@ else
     #W=$(cd "$(dirname "$0")" && pwd -P);
     export WDIR=$W
     #export PROG_TIMEOUT="timeout"
-    export PROG_TIMEOUT=$WDIR"/tools/timeout -t "
+    export PROG_TIMEOUT=$WDIR"/scripts/timeout -t "
     #export PROG_BABEL="babel"
     export PROG_BABEL=$WDIR"/tools/babel"
     export PROG_AP=$WDIR"/tools/ap"
