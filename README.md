@@ -13,16 +13,17 @@ Otherwise, need to modify the paths in the shell scripts.
 2. Generate compound features and KCF files
   ```
   sh prog/run_fea.sh example/NB2008/1_mol
+  sh prog/run_fea.sh example/NB2011DRx/1_mol
   ```
 
 3. Calculate compound similarity
   ```
-  sh prog/run_comp.sh example/NB2008/ example/NB2008/ example_test
+  sh prog/run_comp.sh example/NB2008/ example/NB2011DRx/ example_test
   ```
 
 3. Calculate compound similarity with PC-cluster
   ```
-  sh prog/run_blade_comp.sh example/NB2008/ example/NB2008/ example_test
+  sh prog/run_blade_comp.sh example/NB2008/ example/NB2011DRx/ example_test
   ```
   After finishing the script, submit jobs to PC-cluster
   ```

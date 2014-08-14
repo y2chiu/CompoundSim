@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 usage="USAGE: $0 DIR_MOL"
 
-if [ -z $1 ] || [ ! -d $1 ]; then
+if [ -z $1 ] || [ ! -d $1 ] || [ $# -ne 1 ]; then
     echo " !! [ERROR] Missing arguments!!"
     echo ${usage}
     exit 1
