@@ -50,7 +50,7 @@ else
 
     mkdir -p $dout1
     cd $dout1;
-    sh $PROG_TOJOB $scr1 75 toworkG.sh
+    sh $PROG_TOJOB $scr1 25 toworkG.sh
     cd $CDIR;
     
     echo "#2 calculate LOCAL simcomp"
@@ -59,7 +59,7 @@ else
 
     mkdir -p $dout2
     cd $dout2;
-    sh $PROG_TOJOB $scr2 75 toworkL.sh
+    sh $PROG_TOJOB $scr2 25 toworkL.sh
     cd $CDIR;
 
     

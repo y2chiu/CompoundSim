@@ -20,6 +20,19 @@ Otherwise, need to modify the paths in the shell scripts.
   sh prog/run_comp.sh example/NB2008/ example/NB2008/ example_test
   ```
 
+3. Calculate compound similarity with PC-cluster
+  ```
+  sh prog/run_blade_comp.sh example/NB2008/ example/NB2008/ example_test
+  ```
+  After finishing the script, submit jobs to PC-cluster
+  ```
+  sh towork.sh
+  ```
+  After finishing all jobs, merge the results
+  ```
+  sh tomerge.sh
+  ```
+
 4. Result files
   - Merged file:  
     example_test_result.txt  
