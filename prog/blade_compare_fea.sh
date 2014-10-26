@@ -66,8 +66,12 @@ else
 #
 # For split fea_file to tmp_dir
 #
-    PROG_TOJOB=$WDIR"/scripts/tojob.sh"
-    RID=$RANDOM
+    if [ -z $PROG_TOJOB ]; then 
+        PROG_TOJOB=$WDIR"/scripts/tojob.sh"
+    fi
+    if [ -z $RID ]; then 
+        RID=$RANDOM
+    fi
 
     USER=$(whoami)
     #UTMP="/utmp/${USER}/"

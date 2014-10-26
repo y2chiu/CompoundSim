@@ -16,14 +16,25 @@ Otherwise, need to modify the paths in the shell scripts.
   sh prog/run_fea.sh example/NB2011DRx/1_mol
   ```
 
-3. Calculate compound similarity
+3.1 Calculate compound similarity
   ```
-  sh prog/run_comp.sh example/NB2008/ example/NB2011DRx/ example_test
+  sh prog/run_comp.sh example/NB2008/ example/NB2011DRx/ example_test 0.5 0.5
   ```
 
-3. Calculate compound similarity with PC-cluster
+  - Feature comparison only
   ```
-  sh prog/run_blade_comp.sh example/NB2008/ example/NB2011DRx/ example_test
+  sh prog/compare_fea.sh example/NB2008/ example/NB2011DRx/ example_test 0.5 0.5
+  ```
+
+  - SIMCOMP comparison only
+  ```
+  sh prog/compare_simcomp.sh example/NB2008/ example/NB2011DRx/ example_test
+  ```
+
+
+3.2 Calculate compound similarity with PC-cluster
+  ```
+  sh prog/run_blade_comp.sh example/NB2008/ example/NB2011DRx/ example_test 0.5 0.5
   ```
   After finishing the script, submit jobs to PC-cluster
   ```
@@ -39,9 +50,7 @@ Otherwise, need to modify the paths in the shell scripts.
     example_test_result.txt  
    
   - Feature compariosn:  
-    example_test_fea_result.txt  
-    example_test_fea_result.sorted.txt  
-   
+    example_test_fea_result.txt 
+
   - SIMCOMP comparison:   
     example_test_simcomp_result.txt  
-    example_test_simcomp_result.sorted.txt  

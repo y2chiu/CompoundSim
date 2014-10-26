@@ -1,9 +1,13 @@
 <?php
-    ini_set('memory_limit', '1024M');
+    ini_set('memory_limit', '2048M');
 
 
-    if($argc!=3)
-        die(sprintf(" Usage: %s QUERY_FEA SEARCH_FEA\n\n", $argv[0]));
+    if($argc != 4)
+        die(sprintf(" Usage: %s QUERY_FEA SEARCH_FEA THRESHOLD\n\n", $argv[0]));
+    
+    $TH = doubleval($argv[3]);
+    $TH = ($TH > 1) ? 1 : $TH;
+    $TH = ($TH < 0) ? 0 : $TH;
 
     // query    
     $qfn = $argv[1];
@@ -53,29 +57,25 @@
     fclose($fin);
 
 
-
-
     $kq = array_keys($qfa);
     $ks = array_keys($sfa);
 
-    //$header = array('#Query', 'BestSim', 'Tani', '|');
-    //$header = array_merge($header, $ks);
-
-    //echo join("\t", $header), "\n";
-
-    foreach($kq as $q)
+    //sort($kq, SORT_STRING);
+    //sort($ks, SORT_STRING);
+    //$ns = count($ks);
+    foreach($kq as $qi=>$q)
     {
-        //$max = array('-', 0);
-        //$v = array();
-            $qn = array_reverse(explode('-',$q,2));
-            $qn = array($q);
-
-        foreach($ks as $s)
+            //$qn = array_reverse(explode('-',$q,2));
+            //$qn = array($q);
+            $qn = $q;
+            
+        foreach($ks as $si=>$s)
         {
-            //if($q == $s)    continue;
+            //$sn = array_reverse(explode('-',$s,2));
+            //$sn = array($s);
+            $sn = $s;
 
-            $sn = array_reverse(explode('-',$s,2));
-            $sn = array($s);
+            $idx  = $si + 1;
 
             $vand = $qfa[$q]&$sfa[$s];
             $vor  = $qfa[$q]|$sfa[$s];
@@ -87,18 +87,16 @@
             $vor  = $vor[49];
 
             $tani = ($vor) ? round(doubleval($vand)/$vor,2) : 0;
-            //$v[] = $tani;
 
-            //if($tani > $max[1]) 
-            //    $max = array($s, $tani);
-
-            $o = array_merge( $qn, $sn, array($tani));
-            echo join("\t", $o), "\n";
+            //$o = array_merge( $qn, $sn, array($tani));
+            
+            if($tani >= $TH) 
+            {
+                //$o = array($qn.'_'.$idx, $qn, $sn, $tani);
+                //echo join("\t", $o), "\n";
+                printf("%s|%s\t%s\n", $qn, $sn, $tani);
+            }
         }
-
-        //$out = sprintf("%%s\t%%s\t%%.2f\t|\t%s\n", str_repeat("%.2f\t", count($v)-1));
-        //array_unshift($v, $q, $max[0], $max[1]);
-        //vprintf($out, $v);
 
         unset($out, $v, $q, $max);
     }

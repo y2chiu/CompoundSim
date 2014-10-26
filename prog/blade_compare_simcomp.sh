@@ -20,10 +20,15 @@ else
     W=$(dirname $(readlink -f $0))
     # for shell without readlink 
     #W=$(cd "$(dirname "$0")" && pwd -P)
-    export WDIR=$W
-    export PROG_SIMCOMP=$WDIR"/tools/simcomp"
-    export PROG_TOJOB=$WDIR"/scripts/tojob.sh"
-    export RID=$RANDOM
+    if [ -z $PROG_SIMCOMP ]; then 
+        PROG_SIMCOMP=$WDIR"/tools/simcomp"
+    fi
+    if [ -z $PROG_TOJOB ]; then 
+        PROG_TOJOB=$WDIR"/scripts/tojob.sh"
+    fi
+    if [ -z $RID ]; then 
+        RID=$RANDOM
+    fi
     
     USER=$(whoami)
     #UTMP="/utmp/${USER}/"

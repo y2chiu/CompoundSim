@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
-usage="USAGE: $0 DIR_SET1 DIR_SET2 OUT_FILE_NAME"
+usage="\nUSAGE: $0 DIR_SET1 DIR_SET2 OUT_FILE_NAME [TH_AP [TH_CM]]\n"
 
-if [ $# -ne 3 ] ; then
+if [ $# -lt 3 ] || [ $# -gt 5 ]; then
     echo " !! [ERROR] Missing arguments!!"
-    echo ${usage}
+    echo -e ${usage}
     exit 1
 elif [ ! -d $1 ] ; then
     echo " !! [ERROR] DIR_SET1: ${1} doesn't exist"
-    echo ${usage}
+    echo -e ${usage}
     exit 1
 elif [ ! -d $2 ] ; then
-    echo " !! [ERROR] DIR_SET2: ${2} doesn't exist"
-    echo ${usage}
+    echo -e " !! [ERROR] DIR_SET2: ${2} doesn't exist"
+    echo -e ${usage}
     exit 1
 elif [ -z $3 ] ; then
-    echo ${usage}
+    echo -e ${usage}
     exit 1
 else
     W=$(dirname $(readlink -f $0));
@@ -24,52 +24,58 @@ else
     #export PROG_TIMEOUT="timeout"
     export PROG_TIMEOUT=$WDIR"/scripts/timeout -t "
     export PROG_SIMCOMP=$WDIR"/tools/simcomp"
+    export PROG_TOJOB=$WDIR"/scripts/tojob.sh"
     export RID=$RANDOM
 
     dset1=$(readlink -f $1)
     dset2=$(readlink -f $2)
     fout=$3
-    
-    set1=$(echo $dset1 | xargs -I{} basename {} "/")
-    set2=$(echo $dset2 | xargs -I{} basename {} "/")
+    th_ap=0.5
+    th_cm=0.5
 
-    fea1_ap=$dset1"/fea.ap."$set1
-    fea1_cm=$dset1"/fea.cm."$set1
-    dkcf1=$dset1"/3_kcf"
-    
-    if [ ! -f $fea1_ap ]; then
-        echo " !! [ERROR] NO SET1 AP FEATURE FILE: ${fea1_ap}" 
-        exit 1
-    elif [ ! -f $fea1_cm ]; then
-        echo " !! [ERROR] NO SET1 CM FEATURE FILE: ${fea1_cm}" 
-        exit 1
-    elif [ ! -d $dkcf1 ]; then
-        echo " !! [ERROR] SET1 KCF DIR doesn't exist: ${dkcf1}" 
-        exit 1
-    fi
-    
-    fea2_ap=$dset2"/fea.ap."$set2
-    fea2_cm=$dset2"/fea.cm."$set2
-    dkcf2=$dset2"/3_kcf"
-    
-    if [ ! -f $fea2_ap ]; then
-        echo " !! [ERROR] NO SET1 AP FEATURE FILE: ${fea2_ap}" 
-        exit 1
-    elif [ ! -f $fea2_cm ]; then
-        echo " !! [ERROR] NO SET1 CM FEATURE FILE: ${fea2_cm}" 
-        exit 1
-    elif [ ! -d $dkcf2 ]; then
-        echo " !! [ERROR] SET1 KCF DIR doesn't exist: ${dkcf2}" 
-        exit 1
+    if [ ! -z $5 ] ; then
+        th_ap=$4
+        th_cm=$5
+    elif [ ! -z $4 ] ; then
+        th_ap=$4
+        th_cm=$4
     fi
 
-    echo -e "\n#A. RUN FEATURE COMPARISON"
-    sh $WDIR/compare_fea.sh $fea1_ap $fea2_ap $fout
+    echo
+    echo "#A. RUN FEATURE COMPARISON"
+    echo
+    sh $WDIR/blade_compare_fea.sh $dset1 $dset2 $fout $th_ap $th_cm
     
-    echo -e "\n#B. RUN GLOBAL/LOCAL SIMCOMP"
-    sh $WDIR/compare_blade_simcomp.sh $dkcf1 $dkcf2 $fout
+    echo "#B. RUN GLOBAL/LOCAL SIMCOMP"
+    echo
+    sh $WDIR/blade_compare_simcomp.sh $dset1 $dset2 $fout
     
-    echo -e "\n#C. RUN JOBS AND MERGE RESULTS\n"
-    echo -e "  run towork.sh to submit jobs"
-    echo -e "  run tomerge.sh to merge all results when jobs finished\n"
+    echo "#C. RUN JOBS AND MERGE RESULTS"
+    echo "  run towork.sh to submit jobs"
+    echo "  run tomerge.sh to merge all results when jobs finished"
+    echo
+    
+    f1=${fout}.fea_tani_ap.txt
+    f2=${fout}.fea_tani_cm.txt
+    f3=${fout}.simcomp_global.out
+    f4=${fout}.simcomp_local.out
+    fo=${fout}_result.txt
+    
+    cat > towork.sh <<EOF
+sh towork_simcomp.sh;
+sh towork_fea.sh;
+EOF
+    cat > tomerge.sh <<EOF 
+sh tomerge_fea.sh;
+sh tomerge_simcomp.sh;
+php $WDIR/merge_result.php $f1 $f2 $f3 $f4 | awk 'BEGIN{FS="[ |\t]";OFS="\t";}{NF=NF; print \$0}' > $fo
+sed -i "1i #Compound1\tCompound2\tAP_tanimoto\tCheckmol_tanimoto\t\tSIMCOMP_global\tSIMCOMP_local" $fo
+echo "#done"
+echo "  result: $fo"
+EOF
+
+    echo "  result: ${fo}"
+    echo 
+    chmod +x towork.sh tomerge.sh
+
 fi

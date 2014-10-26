@@ -49,7 +49,12 @@ else
 
     echo "#4 translate to KCF: $dkcf"
     sh $WDIR/3_mol2kcf.sh $dmol $dkcf
-    n=$(find $dkcf -type f -name '*.kcf' | wc -l)
+
+    d=$(readlink -f $dkcf)
+    o="path.$name.kcf"
+    find $d -type f -name '*.kcf' > $dout/$o
+
+    n=$(cat $o | wc -l)
     echo "  generate $n KCF files"
     
     echo "#5 done !!";
