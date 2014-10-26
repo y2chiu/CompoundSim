@@ -91,6 +91,13 @@ else
     mkdir -p $fdir
     mkdir -p $jdir
     
+    echo 
+    echo "#[THRESHOLD] AP: ${th_ap}, CM: ${th_cm}"
+    echo 
+    echo "#1 calculate tanimoto similarity"
+    echo "  generate qsub script: towork_fea.sh"
+    echo "  output: $jdir"
+    
     #default split SET2
     ln=$(wc -l $fea2_ap | cut -d' ' -f1)
     jn=20
@@ -107,14 +114,8 @@ else
         -printf 'php '$WDIR'/4_tanimoto_pair.php '$fea1_cm' %p '$th_ap' > '$jdir'/%f.out\n' >> $scr
     
     sh $PROG_TOJOB $scr 40 $jdir/towork_comp_fea.sh
-    cd -;
+    cd $CDIR
 
-    echo 
-    echo "#[THRESHOLD] AP: ${th_ap}, CM: ${th_cm}"
-    echo 
-    echo "#1 calculate tanimoto similarity"
-    echo "  generate qsub script: towork_fea.sh"
-    echo 
 
     cat > towork_fea.sh <<EOF
 cd $jdir;

@@ -80,18 +80,18 @@ else
     scr2="$UTMP/t5_align_kcf_$RID.local.script";
 
     echo "#1 calculate GLOBAL simcomp"
-    echo "  generate simcomp script: $scr1"
+    echo "  generate simcomp script: $(basename $scr1)"
     echo
     php $WDIR/5_simcomp.php $PROG_SIMCOMP "global" $fkcf1 $fkcf2 > $scr1
 
     echo "#2 calculate LOCAL simcomp"
-    echo "  generate simcomp script: $scr2"
+    echo "  generate simcomp script: $(basename $scr2)"
     echo
     php $WDIR/5_simcomp.php $PROG_SIMCOMP "local" $fkcf1 $fkcf2 > $scr2
     
     echo "#3 generate qsub script: towork_simcomp.sh"
-    echo "  simcomp global: $dout1";
-    echo "  simcomp local : $dout2";
+    echo "  simcomp global: $(basename $dout1)";
+    echo "  simcomp local : $(basename $dout2)";
     echo
     
     mkdir -p $dout1
