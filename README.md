@@ -38,11 +38,11 @@ Otherwise, need to modify the paths in the shell scripts.
   ```
   After finishing the script, submit jobs to PC-cluster
   ```
-  sh towork.sh
+  sh towork_all.sh
   ```
   After finishing all jobs, merge the results
   ```
-  sh tomerge.sh
+  sh tomerge_all.sh
   ```
 
 4. Result files

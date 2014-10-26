@@ -73,11 +73,11 @@ else
     fi
 
     
-    dout1=$UTMP/job_simcomp_glo.$RID
-    dout2=$UTMP/job_simcomp_loc.$RID
+    dout1="$UTMP/job${RID}.simcomp_global"
+    dout2="$UTMP/job${RID}.simcomp_local"
     
-    scr1="$UTMP/t5_align_kcf_$RID.global.script";
-    scr2="$UTMP/t5_align_kcf_$RID.local.script";
+    scr1="$UTMP/job${RID}_simcomp.global.script";
+    scr2="$UTMP/job${RID}_simcomp.local.script";
 
     echo "#1 calculate GLOBAL simcomp"
     echo "  generate simcomp script: $(basename $scr1)"
@@ -96,12 +96,12 @@ else
     
     mkdir -p $dout1
     cd $dout1;
-    sh $PROG_TOJOB $scr1 50 toworkG.sh
+    sh $PROG_TOJOB $scr1 50 toworkG.sh 1
     cd $CDIR;
     
     mkdir -p $dout2
     cd $dout2;
-    sh $PROG_TOJOB $scr2 50 toworkL.sh
+    sh $PROG_TOJOB $scr2 50 toworkL.sh 1
     cd $CDIR;
 
     cat > towork_simcomp.sh <<EOF

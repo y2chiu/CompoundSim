@@ -87,7 +87,7 @@ else
     
 
     fdir=$UTMP/fea.$set2
-    jdir=$UTMP/job_comp_fea.$RID
+    jdir=$UTMP/job${RID}.comp_fea
     mkdir -p $fdir
     mkdir -p $jdir
     
@@ -96,8 +96,9 @@ else
     echo 
     echo "#1 calculate tanimoto similarity"
     echo "  generate qsub script: towork_fea.sh"
-    echo "  output: $jdir"
-    
+    echo "  output: $(basename $jdir)"
+    echo
+
     #default split SET2
     ln=$(wc -l $fea2_ap | cut -d' ' -f1)
     jn=20
@@ -113,6 +114,7 @@ else
     find $fdir -name 'tfea.cm*' \
         -printf 'php '$WDIR'/4_tanimoto_pair.php '$fea1_cm' %p '$th_ap' > '$jdir'/%f.out\n' >> $scr
     
+    cd $jdir;
     sh $PROG_TOJOB $scr 40 $jdir/towork_comp_fea.sh
     cd $CDIR
 

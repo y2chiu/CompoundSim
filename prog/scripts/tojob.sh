@@ -15,8 +15,17 @@ n=$(( $ln/$jn + 1 ));
 if [ -f $1 ]; then
 
     find ${PWD} -type f -name 'job*' -delete
-    split -a 4 -d -l $n $1 job
-    find ${PWD} -type f -name 'job*' -printf 'qsub %p\n' | sort > $o
-    chmod +x job*
+
+    if [ -z $4 ]; then
+        split -a 4 -d -l $n $1 job
+        find ${PWD} -type f -name 'job*' -printf 'qsub %p\n' | sort > $o
+        chmod +x job*
+    else
+        split -a 4 -d -l $n $1 lst
+        find ${PWD} -type f -name 'lst*' -printf 'sh %p\n' | sort > ${o}.job
+        split -a 4 -d -l 1 ${o}.job job
+        find ${PWD} -type f -name 'job*' -printf 'qsub %p\n' | sort > $o
+        chmod +x job*
+    fi
 
 fi

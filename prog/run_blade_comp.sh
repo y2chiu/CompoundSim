@@ -51,8 +51,8 @@ else
     sh $WDIR/blade_compare_simcomp.sh $dset1 $dset2 $fout
     
     echo "#C. RUN JOBS AND MERGE RESULTS"
-    echo "  run towork.sh to submit jobs"
-    echo "  run tomerge.sh to merge all results when jobs finished"
+    echo "  run towork_all.ish to submit jobs"
+    echo "  run tomerge_all.sh to merge all results when jobs finished"
     echo
     
     f1=${fout}.fea_tani_ap.txt
@@ -61,11 +61,11 @@ else
     f4=${fout}.simcomp_local.out
     fo=${fout}_result.txt
     
-    cat > towork.sh <<EOF
+    cat > towork_all.sh <<EOF
 sh towork_simcomp.sh;
 sh towork_fea.sh;
 EOF
-    cat > tomerge.sh <<EOF 
+    cat > tomerge_all.sh <<EOF 
 sh tomerge_fea.sh;
 sh tomerge_simcomp.sh;
 php $WDIR/merge_result.php $f1 $f2 $f3 $f4 | awk 'BEGIN{FS="[ |\t]";OFS="\t";}{NF=NF; print \$0}' > $fo
@@ -76,6 +76,6 @@ EOF
 
     echo "  result: ${fo}"
     echo 
-    chmod +x towork.sh tomerge.sh
+    chmod +x towork_all.sh tomerge_all.sh
 
 fi
