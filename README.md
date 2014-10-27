@@ -45,6 +45,17 @@ Otherwise, need to modify the paths in the shell scripts.
   sh tomerge_all.sh
   ```
 
+  - Feature comparison only
+  ```
+  sh prog/blade_compare_fea.sh example/NB2008/ example/NB2011DRx/ example_test 0.5 0.5
+  ```
+
+  - SIMCOMP comparison only
+  ```
+  sh prog/blade_compare_simcomp.sh example/NB2008/ example/NB2011DRx/ example_test
+  ```
+
+
 4. Result files
   - Merged file:  
     example_test_result.txt  

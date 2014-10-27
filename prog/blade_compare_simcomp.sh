@@ -20,6 +20,8 @@ else
     W=$(dirname $(readlink -f $0))
     # for shell without readlink 
     #W=$(cd "$(dirname "$0")" && pwd -P)
+    export WDIR=$W
+
     if [ -z $PROG_SIMCOMP ]; then 
         PROG_SIMCOMP=$WDIR"/tools/simcomp"
     fi

@@ -32,8 +32,7 @@ else
     if [ ! -z $5 ] ; then
         th_ap=$4
         th_cm=$5
-    fi 
-    if [ ! -z $4 ] ; then
+    elif [ ! -z $4 ] ; then
         th_ap=$4
         th_cm=$4
     fi 
