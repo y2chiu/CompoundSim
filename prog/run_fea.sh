@@ -54,7 +54,7 @@ else
     o="path.$name.kcf"
     find $d -type f -name '*.kcf' > $dout/$o
 
-    n=$(cat $o | wc -l)
+    n=$(cat $dout/$o | wc -l)
     echo "  generate $n KCF files"
     
     echo "#5 done !!";
