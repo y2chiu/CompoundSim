@@ -52,7 +52,7 @@ else
     f3=${fout}.simcomp_global.out
     f4=${fout}.simcomp_local.out
     fo=${fout}_result.txt
-    php $WDIR/6_merge_result.php $f1 $f2 $f3 $f4 > $fo
+    php $WDIR/merge_result.php $f1 $f2 $f3 $f4 > $fo
 
     sed -i "1i #Compound1\tCompound2\tAP_tanimoto\tCheckmol_tanimoto\t\tSIMCOMP_global\tSIMCOMP_local" $fo
 
