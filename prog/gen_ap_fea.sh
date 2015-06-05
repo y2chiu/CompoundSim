@@ -96,7 +96,7 @@ php $WDIR/1_transFea.php $dlog/lst.ap.$SET_NAME-ap.txt | sort > $dfea/fea.ap.$SE
 echo -e "  AP feature file: $dfea/fea.ap.$SET_NAME";
 EOF
         chmod +x $BLADE_SCRIPT.ap
-        echo "  run the script: $BLADE_SCRIPT"
-        echo "  run the script: $BLADE_SCRIPT.ap when jobs finished"
+        echo -e "  \033[1;31mrun the script: $BLADE_SCRIPT\033[m"
+        echo -e "  \033[1;31mrun the script: $BLADE_SCRIPT.ap when jobs finished\033[m"
     fi
 fi

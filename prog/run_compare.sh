@@ -56,6 +56,7 @@ else
         export BLADE_SCRIPT="towork.sh"
         export DJOB=$(readlink -f $DJOB)
         export CDIR=$(readlink -f $PWD)
+        export ALL_MODE="1"
 
         # clear BLADE_SCRIPT file
         echo "" > $BLADE_SCRIPT
@@ -87,25 +88,26 @@ else
         f2=${fout}.fea_tani_cm.txt
         f3=${fout}.simcomp_global.out
         f4=${fout}.simcomp_local.out
-        fo=${fout}_result.txt
+        fo=${fout}_compare_result.txt
 
         php $WDIR/merge_result.php $f1 $f2 $f3 $f4 | awk 'BEGIN{FS="[ |\t]";OFS="\t";}{NF=NF; print $0}' > $fo
         sed -i "1i #Compound1\tCompound2\tAP_tanimoto\tCheckmol_tanimoto\t\tSIMCOMP_global\tSIMCOMP_local" $fo
 
-        echo "#C. DONE"
-        echo "  result: ${fo}"
+        echo -e "\n#C. DONE"
+        echo -e "  result: \033[1;33m${fo}\033[m"
+        echo
         
     else
-        echo "#C. RUN JOBS AND MERGE RESULTS"
-        echo "  run towork_all.ish to submit jobs"
-        echo "  run tomerge_all.sh to merge all results when jobs finished"
+        echo -e "\n#C. RUN JOBS AND MERGE RESULTS"
+        echo -e "  \033[1;31mrun towork_all.sh to submit jobs\033[m"
+        echo -e "  \033[1;31mrun tomerge_all.sh to merge all results when jobs finished\033[m"
         echo
     
         f1=${fout}.fea_tani_ap.txt
         f2=${fout}.fea_tani_cm.txt
         f3=${fout}.simcomp_global.out
         f4=${fout}.simcomp_local.out
-        fo=${fout}_result.txt
+        fo=${fout}_compare_result.txt
     
         cat > towork_all.sh <<EOF
 sh towork_simcomp.sh;
@@ -116,12 +118,9 @@ sh tomerge_fea.sh;
 sh tomerge_simcomp.sh;
 php $WDIR/merge_result.php $f1 $f2 $f3 $f4 | awk 'BEGIN{FS="[ |\t]";OFS="\t";}{NF=NF; print \$0}' > $fo
 sed -i "1i #Compound1\tCompound2\tAP_tanimoto\tCheckmol_tanimoto\t\tSIMCOMP_global\tSIMCOMP_local" $fo
-echo "#done"
-echo "  result: $fo"
+echo -e "#done"
+echo -e "  result: \033[1;33m$fo\033[m"
 EOF
-
-        echo "  result: ${fo}"
-        echo 
         chmod +x towork_all.sh tomerge_all.sh
     fi
 fi

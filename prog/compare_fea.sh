@@ -77,7 +77,6 @@ else
         exit 1
     fi
 
-    echo 
     echo "#[THRESHOLD] AP: ${th_ap}, CM: ${th_cm}"
     echo
 
@@ -97,8 +96,8 @@ else
 
         sed -i "1i #Compound1\tCompound2\tAP_tanimoto\tCheckmol_tanimoto" $fout3
     
-        echo "#3 done !!";
-        echo "  result: $fout3";
+        echo -e "#3 done !!";
+        echo -e "  result: \033[1;33m$fout3\033[m";
     else
         echo "#[USING BLADE MODE]"
             
@@ -161,15 +160,20 @@ cat $jdir/tfea.ap*.out > $fout_ap;
 cat $jdir/tfea.cm*.out > $fout_cm;
 php $WDIR/merge_result.php $fout_ap $fout_cm | awk 'BEGIN{FS="[ |\t]";OFS="\t";}{NF=NF; print \$0}' > $fout3
 sed -i "1i #Compound1\tCompound2\tAP_tanimoto\tCheckmol_tanimoto" $fout3
-echo "#done"
-echo "  result: $fout3"
+echo -e "#done"
+echo -e "  result: \033[1;33m$fout3\033[m"
 EOF
-        echo "#3 run scripts"
-        echo "  run towork_fea.sh to submit jobs"
-        echo "  run tomerge_fea.sh to merge all results when jobs finished"
-        echo
-        echo "  result: $fout3"
-        echo 
+        if [ -z "$ALL_MODE" ]; then
+            echo -e "#3 run scripts"
+            echo -e "  \033[1;31mrun towork_fea.sh to submit jobs\033[m"
+            echo -e "  \033[1;31mrun tomerge_fea.sh to merge all results when jobs finished\033[m"
+            echo
+        else
+            echo -e "#3 run scripts"
+            echo -e "  \033[mrun towork_fea.sh to submit jobs\033[m"
+            echo -e "  \033[mrun tomerge_fea.sh to merge all results when jobs finished\033[m"
+            echo
+        fi
 
         chmod +x towork_fea.sh tomerge_fea.sh
     fi

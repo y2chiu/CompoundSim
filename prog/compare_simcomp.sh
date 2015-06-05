@@ -100,8 +100,8 @@ else
 
         sed -i "1i #Compound1\tCompound2\tSIMCOMP_global\tSIMCOMP_local" $fout3
     
-        echo "#4 done !!";
-        echo "  result: $fout3";
+        echo -e "#4 done !!";
+        echo -e "  result: \033[1;33m$fout3\033[m";
     else
         echo "#[USING BLADE MODE]"
             
@@ -159,16 +159,21 @@ cat \`find $dout1 -type f -name 'job*.o*' | sort\` | awk '{printf("%s|%s\t%s\n",
 cat \`find $dout2 -type f -name 'job*.o*' | sort\` | awk '{printf("%s|%s\t%s\n",\$1,\$3,\$6);}' > $fout2
 php $WDIR/merge_result.php $fout1 $fout2 | awk 'BEGIN{FS="[ |\t]";OFS="\t";}{NF=NF; print \$0}' > $fout3
 sed -i "1i #Compound1\tCompound2\tSIMCOMP_global\tSIMCOMP_local" $fout3
-echo "#done"
-echo "  result: $fout3"
+echo -e "#done"
+echo -e "  result: \033[1;33m$fout3\033[m"
 EOF
 
-        echo "#5 run scripts"
-        echo "  run towork_simcomp.sh to submit jobs"
-        echo "  run tomerge_simcomp.sh to merge all results when jobs finished"
-        echo
-        echo "  result: $fout3"
-        echo 
+        if [ -z "$ALL_MODE" ]; then
+            echo -e "#5 run scripts"
+            echo -e "  \033[1;31mrun towork_simcomp.sh to submit jobs\033[m"
+            echo -e "  \033[1;31mrun tomerge_simcomp.sh to merge all results when jobs finished\033[m"
+            echo
+        else
+            echo -e "#5 run scripts"
+            echo -e "  \033[mrun towork_simcomp.sh to submit jobs\033[m"
+            echo -e "  \033[mrun tomerge_simcomp.sh to merge all results when jobs finished\033[m"
+            echo
+        fi
 
         chmod +x towork_simcomp.sh tomerge_simcomp.sh
     fi
